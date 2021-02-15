@@ -10,14 +10,17 @@
 // Note: image data returned by the API will only give you the filename;
 // prepend with `https://image.tmdb.org/t/p/w500/` to get the 
 // complete image URL
-
 window.addEventListener('DOMContentLoaded', async function(event) {
+  let db = firebase.firestore()
   // Step 1: Construct a URL to get movies playing now from TMDB, fetch
   // data and put the Array of movie Objects in a variable called
   // movies. Write the contents of this array to the JavaScript
   // console to ensure you've got good data
   // ⬇️ ⬇️ ⬇️
-
+  let response = await fetch('https://api.themoviedb.org/3/movie/550?api_key=9b581f7d8c842c457d6c8baa24e27295')
+  let json = await response.json()
+  let movies = [json]
+  console.log(movies)
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
   
@@ -33,7 +36,32 @@ window.addEventListener('DOMContentLoaded', async function(event) {
   //   <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
   // </div>
   // ⬇️ ⬇️ ⬇️
+      for(let i=0; i<movies.length; i++){
+      let movieID = movies[i].id
+      let poster = movies[i].poster_path
+       
+      document.querySelector('.movies').insertAdjacentHTML('beforeend', `<div class=".movies-${movieID} w-1/5 p-4">
+          <img src="https://image.tmdb.org/t/p/w500/${poster}" class="w-full">
+          <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">Watched</a>
+        </div>`)
+  
+      document.querySelector(`.watched-button`).addEventListener('click', async function(event){
+        event.preventDefault()
+        document.querySelector('.movies').classList.add('opacity-20')
+        console.log(`Movie ${movieID} was watched.`)
 
+      let querySnapshot = await db.collection('Movies').get()
+      let watchedMovies = querySnapshot.docs
+      //console.log(watchedMovies)
+      for (let i=0; i < Movies.length; i++){
+        let watchedMovies = Movies[i]
+        let movieID = Movies.id
+        console.log(movieID)
+      }
+      })
+
+    }
+  
   // ⬆️ ⬆️ ⬆️ 
   // End Step 2
 
