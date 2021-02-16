@@ -17,10 +17,14 @@ window.addEventListener('DOMContentLoaded', async function(event) {
   // movies. Write the contents of this array to the JavaScript
   // console to ensure you've got good data
   // ⬇️ ⬇️ ⬇️
-  let response = await fetch('https://api.themoviedb.org/3/movie/550?api_key=9b581f7d8c842c457d6c8baa24e27295')
-  let json = await response.json()
-  let movies = [json]
+  let url = 'https://api.themoviedb.org/3/movie/now_playing?api_key=9b581f7d8c842c457d6c8baa24e27295&language=en-US'
+  let response = await fetch(url)
+  let movies = await response.json()
   console.log(movies)
+
+  let allMovies = movies.results
+  console.log(allMovies.length)
+
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
   
@@ -36,31 +40,35 @@ window.addEventListener('DOMContentLoaded', async function(event) {
   //   <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
   // </div>
   // ⬇️ ⬇️ ⬇️
-      for(let i=0; i<movies.length; i++){
-      let movieID = movies[i].id
-      let poster = movies[i].poster_path
-       
-      document.querySelector('.movies').insertAdjacentHTML('beforeend', `<div class=".movies-${movieID} w-1/5 p-4">
-          <img src="https://image.tmdb.org/t/p/w500/${poster}" class="w-full">
-          <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">Watched</a>
-        </div>`)
-  
-      document.querySelector(`.watched-button`).addEventListener('click', async function(event){
-        event.preventDefault()
-        document.querySelector('.movies').classList.add('opacity-20')
-        console.log(`Movie ${movieID} was watched.`)
+      for(let i=0; i<allMovies.length; i++) {
+        let movieID = allMovies[i].id
+        let moviePosterPath = allMovies[i].poster_path
+ 
+          document.querySelector('.movies').insertAdjacentHTML('beforeend', `<div class="w-1/5 p-4 movies-${movieID}">
+              <img src="https://image.tmdb.org/t/p/w500${moviePosterPath}" class="w-full">
+              <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">Watched!</a>
+            </div>`)
 
-      let querySnapshot = await db.collection('Movies').get()
-      let watchedMovies = querySnapshot.docs
-      //console.log(watchedMovies)
-      for (let i=0; i < Movies.length; i++){
-        let watchedMovies = Movies[i]
-        let movieID = Movies.id
-        console.log(movieID)
+          let watchButton = document.querySelector(`.watched-button-${movieID}`)
+          let selectedMovie = document.querySelector(`.movies-${movieID}`)
+          
+          watchButton.addEventListener('click', async function(event){
+              event.preventDefault()
+              selectedMovie.classList.add('opacity-20')
+          })
       }
-      })
+  
+     
 
-    }
+      //let querySnapshot = await db.collection('watched').get()
+       //  let watched = querySnapshot.docs
+        // for (let j=0; j < watched.length; j++){
+        //   let watched = watched[j].data()
+        //   watched.name
+       //  }
+     
+        
+
   
   // ⬆️ ⬆️ ⬆️ 
   // End Step 2
@@ -76,6 +84,8 @@ window.addEventListener('DOMContentLoaded', async function(event) {
   //   the movie is watched. Use .classList.remove('opacity-20')
   //   to remove the class if the element already contains it.
   // ⬇️ ⬇️ ⬇️
+
+    
 
   // ⬆️ ⬆️ ⬆️ 
   // End Step 3
