@@ -2,6 +2,22 @@ let db = firebase.firestore()
 
 window.addEventListener('DOMContentLoaded', async function(event) {
   // Step 1: Accept input from the "new post" form and write 
+
+  let form = document.querySelector('form')
+
+  form.addEventListener('submit', function(event){
+    event.preventDefault()
+
+    let usernameInput = document.queryselector('#username')
+    let imageUrlInput = document.querySelector ('#image-url')
+
+    usernameInput.innerHTML
+
+    db.collection('posts').add({
+      imageUrl: imageUrlInput.innerHTML,
+      username: usernameInput.innerHTML
+    })
+  })
   // post data to Firestore. For best results, use square images
   // from Unsplash, e.g. https://unsplash.com/s/photos/tacos?orientation=squarish
   // Right-click and "copy image address"
