@@ -30,7 +30,11 @@ window.addEventListener('DOMContentLoaded', async function(event) {
 
               await db.collection('watched').doc(`${movieID}`).set({})
 
-              
+          let watchedMovie = await db.collection('watched').doc(`${movieID}`).get()
+
+          if(watchedMovie == movieID){
+           selectedMovie.classList.add('opacity-20')
+          }
 
           })
       }
